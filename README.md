@@ -142,10 +142,10 @@ Bu proje eğitim amaçlı geliştirilmiştir.
 
 ## 👨‍💻 Geliştirici
 
-**[Öğrenci Adı]**
-- Öğrenci No: [Öğrenci Numarası]
-- Email: [Email Adresi]
-- GitHub: [GitHub Profili]
+**Talha Kenan Yaylacık**
+- Öğrenci No: B211210099
+- Email: talhakennan1 qgmail.com
+- GitHub: github.com/talhakenan1
 
 ---
 
