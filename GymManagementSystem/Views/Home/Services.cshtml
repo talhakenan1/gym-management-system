@@ -1,0 +1,108 @@
+@model IEnumerable<GymManagementSystem.Models.Service>
+
+@{
+    ViewData["Title"] = "Hizmetlerimiz";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+            <h1 class="display-4 fw-bold mb-3">Hizmetlerimiz</h1>
+            <p class="lead text-muted">İhtiyacınıza uygun en iyi fitness programlarını keşfedin</p>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var service in Model)
+        {
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-hover overflow-hidden">
+                    <div class="card-body p-4 text-center d-flex flex-column">
+                        <div class="mb-4">
+                            <div class="service-icon-wrapper bg-light rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3">
+                                @if (service.Name.Contains("Personal")) { <i class="fas fa-user-friends fa-2x text-primary"></i> }
+                                else if (service.Name.Contains("Yoga")) { <i class="fas fa-spa fa-2x text-success"></i> }
+                                else if (service.Name.Contains("Cardio")) { <i class="fas fa-running fa-2x text-danger"></i> }
+                                else if (service.Name.Contains("Weight")) { <i class="fas fa-dumbbell fa-2x text-warning"></i> }
+                                else { <i class="fas fa-fire-alt fa-2x text-info"></i> }
+                            </div>
+                        </div>
+
+                        <h4 class="card-title fw-bold mb-3">@service.Name</h4>
+                        <p class="card-text text-muted flex-grow-1">@service.Description</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center py-3 border-top border-bottom my-3">
+                            <div class="d-flex align-items-center text-muted">
+                                <i class="far fa-clock me-2"></i>
+                                <span>@service.Duration dk</span>
+                            </div>
+                            <div class="text-primary fw-bold fs-5">
+                                ₺@service.Price.ToString("F0")
+                            </div>
+                        </div>
+
+                        @if (service.TrainerServices.Any())
+                        {
+                            <div class="mb-4">
+                                <small class="text-muted d-block mb-2">Eğitmenler</small>
+                                <div class="d-flex justify-content-center flex-wrap gap-1">
+                                    @foreach (var ts in service.TrainerServices.Take(3))
+                                    {
+                                        <span class="badge bg-light text-dark border" title="@ts.Trainer.FirstName @ts.Trainer.LastName">
+                                            <i class="fas fa-user-circle me-1"></i>@ts.Trainer.FirstName
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="mt-auto">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a asp-controller="Appointments" asp-action="Create" asp-route-serviceId="@service.Id" class="btn btn-primary w-100 rounded-pill">
+                                    <i class="fas fa-calendar-check me-2"></i>Randevu Al
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary w-100 rounded-pill">
+                                    <i class="fas fa-lock me-2"></i>Giriş Yap
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-clipboard-list fa-4x text-muted opacity-50"></i>
+            </div>
+            <h3 class="text-muted fw-light">Henüz hizmet eklenmemiş</h3>
+            <p class="text-muted">Çok yakında yeni hizmetlerimizle buradayız!</p>
+        </div>
+    }
+</div>
+
+<style>
+    .service-icon-wrapper {
+        width: 80px;
+        height: 80px;
+        transition: transform 0.3s ease;
+    }
+    .card:hover .service-icon-wrapper {
+        transform: scale(1.1) rotate(5deg);
+    }
+    .shadow-hover {
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .shadow-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+</style>
