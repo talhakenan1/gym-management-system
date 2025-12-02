@@ -1,0 +1,137 @@
+@model Trainer
+
+@{
+    ViewData["Title"] = "Antrenör Detayları";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user me-2"></i>Antrenör Detayları
+                    </h3>
+                    <div class="card-tools">
+                        <span class="badge @(Model.IsActive ? "bg-success" : "bg-danger")">
+                            @(Model.IsActive ? "Aktif" : "Pasif")
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th width="200">Ad Soyad:</th>
+                                    <td>@Model.FirstName @Model.LastName</td>
+                                </tr>
+                                <tr>
+                                    <th>E-posta:</th>
+                                    <td>@Model.Email</td>
+                                </tr>
+                                <tr>
+                                    <th>Telefon:</th>
+                                    <td>@Model.Phone</td>
+                                </tr>
+                                <tr>
+                                    <th>Uzmanlık:</th>
+                                    <td>@Model.Specialization</td>
+                                </tr>
+                                <tr>
+                                    <th>Deneyim:</th>
+                                    <td>@Model.Experience yıl</td>
+                                </tr>
+                                <tr>
+                                    <th>Biyografi:</th>
+                                    <td>@Model.Bio</td>
+                                </tr>
+                                <tr>
+                                    <th>Spor Salonu:</th>
+                                    <td>@Model.Gym?.Name</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-dumbbell me-2"></i>Verdiği Hizmetler
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.TrainerServices?.Any() == true)
+                                    {
+                                        @foreach (var trainerService in Model.TrainerServices)
+                                        {
+                                            <div class="mb-2">
+                                                <span class="badge bg-primary">@trainerService.Service.Name</span>
+                                                <small class="text-muted d-block">₺@trainerService.Service.Price - @trainerService.Service.Duration dk</small>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted mb-0">Henüz hizmet atanmamış.</p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="card bg-light mt-3">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-clock me-2"></i>Çalışma Saatleri
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.TrainerAvailabilities?.Any() == true)
+                                    {
+                                        @foreach (var availability in Model.TrainerAvailabilities.OrderBy(a => a.DayOfWeek))
+                                        {
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span>@GetDayName(availability.DayOfWeek):</span>
+                                                <span>@availability.StartTime.ToString(@"hh\:mm") - @availability.EndTime.ToString(@"hh\:mm")</span>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted mb-0">Çalışma saatleri belirtilmemiş.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                        </a>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                                <i class="fas fa-edit me-2"></i>Düzenle
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetDayName(DayOfWeek dayOfWeek)
+    {
+        return dayOfWeek switch
+        {
+            DayOfWeek.Monday => "Pazartesi",
+            DayOfWeek.Tuesday => "Salı",
+            DayOfWeek.Wednesday => "Çarşamba",
+            DayOfWeek.Thursday => "Perşembe",
+            DayOfWeek.Friday => "Cuma",
+            DayOfWeek.Saturday => "Cumartesi",
+            DayOfWeek.Sunday => "Pazar",
+            _ => dayOfWeek.ToString()
+        };
+    }
+}

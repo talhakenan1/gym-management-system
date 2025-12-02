@@ -1,0 +1,140 @@
+@model GymManagementSystem.Models.Trainer
+
+@{
+    ViewData["Title"] = "Yeni Antrenör Ekle";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h4 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-user-plus"></i> Yeni Antrenör Ekle
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="FirstName" class="form-label">
+                                        <i class="fas fa-user"></i> Ad *
+                                    </label>
+                                    <input asp-for="FirstName" class="form-control" placeholder="Antrenörün adı" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="LastName" class="form-label">
+                                        <i class="fas fa-user"></i> Soyad *
+                                    </label>
+                                    <input asp-for="LastName" class="form-control" placeholder="Antrenörün soyadı" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Email" class="form-label">
+                                        <i class="fas fa-envelope"></i> E-posta
+                                    </label>
+                                    <input asp-for="Email" class="form-control" type="email" placeholder="ornek@email.com" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Phone" class="form-label">
+                                        <i class="fas fa-phone"></i> Telefon
+                                    </label>
+                                    <input asp-for="Phone" class="form-control" placeholder="+90 555 123 4567" />
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Experience" class="form-label">
+                                        <i class="fas fa-medal"></i> Deneyim (Yıl)
+                                    </label>
+                                    <input asp-for="Experience" class="form-control" type="number" min="0" max="50" />
+                                    <span asp-validation-for="Experience" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="GymId" class="form-label">
+                                        <i class="fas fa-building"></i> Spor Salonu *
+                                    </label>
+                                    <select asp-for="GymId" class="form-select" asp-items="ViewBag.GymId">
+                                        <option value="">Spor salonu seçin</option>
+                                    </select>
+                                    <span asp-validation-for="GymId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Specialization" class="form-label">
+                                <i class="fas fa-star"></i> Uzmanlık Alanı
+                            </label>
+                            <input asp-for="Specialization" class="form-control" placeholder="Örn: Kilo verme, kas geliştirme, yoga" />
+                            <span asp-validation-for="Specialization" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-dumbbell"></i> Verebileceği Hizmetler
+                            </label>
+                            <div class="row">
+                                @if (ViewBag.Services != null)
+                                {
+                                    @foreach (var service in (IEnumerable<SelectListItem>)ViewBag.Services)
+                                    {
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" name="selectedServices" value="@service.Value" id="service_@service.Value">
+                                                <label class="form-check-label" for="service_@service.Value">
+                                                    @service.Text
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Bio" class="form-label">
+                                <i class="fas fa-info-circle"></i> Biyografi
+                            </label>
+                            <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Antrenör hakkında kısa bilgi..."></textarea>
+                            <span asp-validation-for="Bio" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary btn-lg me-3">
+                                <i class="fas fa-save"></i> Antrenörü Kaydet
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-arrow-left"></i> Geri Dön
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

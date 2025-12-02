@@ -1,0 +1,125 @@
+@model IEnumerable<GymManagementSystem.Models.Trainer>
+
+@{
+    ViewData["Title"] = "Antrenör Yönetimi";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800 fw-bold">Antrenör Yönetimi</h1>
+            <p class="text-muted small mb-0">Sistemdeki eğitmenleri yönetin</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary btn-icon-split shadow-sm rounded-pill px-4">
+            <span class="icon text-white-50 me-2"><i class="fas fa-plus"></i></span>
+            <span class="text">Yeni Antrenör</span>
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 border-start border-success border-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Antrenör Listesi</h6>
+            <div class="input-group input-group-sm" style="width: 250px;">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Ara..." aria-label="Search">
+                <button class="btn btn-primary" type="button"><i class="fas fa-search fa-sm"></i></button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3 border-0">Antrenör</th>
+                            <th class="py-3 border-0">İletişim</th>
+                            <th class="py-3 border-0">Uzmanlık</th>
+                            <th class="py-3 border-0">Deneyim</th>
+                            <th class="py-3 border-0">Durum</th>
+                            <th class="pe-4 py-3 border-0 text-end">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var trainer in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-primary-subtle text-primary rounded-circle me-3 d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
+                                            @(trainer.FirstName.Substring(0,1))@(trainer.LastName.Substring(0,1))
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">@trainer.FirstName @trainer.LastName</div>
+                                            <div class="small text-muted">ID: #@trainer.Id</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column small">
+                                        @if (!string.IsNullOrEmpty(trainer.Email))
+                                        {
+                                            <span class="mb-1"><i class="fas fa-envelope text-muted me-2" style="width: 16px;"></i>@trainer.Email</span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(trainer.Phone))
+                                        {
+                                            <span><i class="fas fa-phone text-muted me-2" style="width: 16px;"></i>@trainer.Phone</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info-subtle text-info rounded-pill px-3">
+                                        @(string.IsNullOrEmpty(trainer.Specialization) ? "Genel" : (trainer.Specialization.Length > 20 ? trainer.Specialization.Substring(0, 20) + "..." : trainer.Specialization))
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="fw-bold me-2">@trainer.Experience</span>
+                                        <span class="text-muted small">Yıl</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (trainer.IsActive)
+                                    {
+                                        <span class="badge bg-success-subtle text-success rounded-pill"><i class="fas fa-check-circle me-1"></i>Aktif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger rounded-pill"><i class="fas fa-times-circle me-1"></i>Pasif</span>
+                                    }
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <div class="btn-group">
+                                        <a asp-action="Edit" asp-route-id="@trainer.Id" class="btn btn-sm btn-light text-primary" title="Düzenle"><i class="fas fa-edit"></i></a>
+                                        <a asp-action="Details" asp-route-id="@trainer.Id" class="btn btn-sm btn-light text-info" title="Detaylar"><i class="fas fa-info-circle"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@trainer.Id" class="btn btn-sm btn-light text-danger" title="Sil"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="fas fa-inbox fa-3x mb-3 opacity-25"></i>
+                                    <p class="mb-0">Kayıtlı antrenör bulunamadı.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white py-3 border-top-0">
+            <div class="d-flex justify-content-between align-items-center small text-muted">
+                <div>Toplam @Model.Count() kayıt gösteriliyor</div>
+                <!-- Pagination could go here -->
+            </div>
+        </div>
+    </div>
+</div>

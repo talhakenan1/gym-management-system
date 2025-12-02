@@ -1,0 +1,75 @@
+@model GymManagementSystem.Models.TrainerAvailability
+
+@{
+    ViewData["Title"] = "Müsaitlik Ekle";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-calendar-plus text-primary"></i> Yeni Müsaitlik Ekle</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="TrainerId" class="form-label">Antrenör</label>
+                            <select asp-for="TrainerId" class="form-select" asp-items="ViewBag.TrainerId">
+                                <option value="">Antrenör Seçin</option>
+                            </select>
+                            <span asp-validation-for="TrainerId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DayOfWeek" class="form-label">Gün</label>
+                            <select asp-for="DayOfWeek" class="form-select">
+                                <option value="">Gün Seçin</option>
+                                <option value="1">Pazartesi</option>
+                                <option value="2">Salı</option>
+                                <option value="3">Çarşamba</option>
+                                <option value="4">Perşembe</option>
+                                <option value="5">Cuma</option>
+                                <option value="6">Cumartesi</option>
+                                <option value="0">Pazar</option>
+                            </select>
+                            <span asp-validation-for="DayOfWeek" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="StartTime" class="form-label">Başlangıç Saati</label>
+                                    <input asp-for="StartTime" type="time" class="form-control" />
+                                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="EndTime" class="form-label">Bitiş Saati</label>
+                                    <input asp-for="EndTime" type="time" class="form-control" />
+                                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Geri
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
