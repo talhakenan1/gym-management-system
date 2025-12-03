@@ -1,0 +1,100 @@
+@model Service
+
+@{
+    ViewData["Title"] = "Hizmet Detayları";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-info-circle me-2"></i>Hizmet Detayları
+                    </h3>
+                    <div class="card-tools">
+                        <span class="badge @(Model.IsActive ? "bg-success" : "bg-danger")">
+                            @(Model.IsActive ? "Aktif" : "Pasif")
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th width="200">Hizmet Adı:</th>
+                                    <td>@Model.Name</td>
+                                </tr>
+                                <tr>
+                                    <th>Açıklama:</th>
+                                    <td>@Model.Description</td>
+                                </tr>
+                                <tr>
+                                    <th>Süre:</th>
+                                    <td>@Model.Duration dakika</td>
+                                </tr>
+                                <tr>
+                                    <th>Fiyat:</th>
+                                    <td>₺@Model.Price.ToString("N2")</td>
+                                </tr>
+                                <tr>
+                                    <th>Spor Salonu:</th>
+                                    <td>@Model.Gym?.Name</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-users me-2"></i>Antrenörler
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    @if (Model.TrainerServices?.Any() == true)
+                                    {
+                                        @foreach (var trainerService in Model.TrainerServices)
+                                        {
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="avatar-sm bg-primary rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                    <i class="fas fa-user text-white"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">@trainerService.Trainer.FirstName @trainerService.Trainer.LastName</div>
+                                                    <small class="text-muted">@trainerService.Trainer.Specialization</small>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted mb-0">Bu hizmet için henüz antrenör atanmamış.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Geri Dön
+                        </a>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                                <i class="fas fa-edit me-2"></i>Düzenle
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+}
+</style>
