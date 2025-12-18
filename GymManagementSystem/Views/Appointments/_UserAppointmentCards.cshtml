@@ -1,0 +1,190 @@
+@model IEnumerable<GymManagementSystem.Models.Appointment>
+@using Microsoft.AspNetCore.Html
+
+@if (Model.Any())
+{
+    <div class="row g-4">
+        @foreach (var appointment in Model)
+        {
+            var statusClass = GetStatusClass(appointment.Status);
+            var statusText = GetStatusText(appointment.Status);
+            var statusIcon = GetStatusIcon(appointment.Status);
+            
+            <div class="col-lg-6 col-xl-4">
+                <div class="appointment-card h-100">
+                    <!-- Card Header with Status -->
+                    <div class="card-header @statusClass text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <i class="fas fa-calendar me-2"></i>
+                                <span class="fw-bold">@appointment.AppointmentDate.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"))</span>
+                            </div>
+                            <span class="badge bg-white bg-opacity-25 rounded-pill px-3 py-2">
+                                <i class="@statusIcon me-1"></i>@statusText
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <!-- Service Info -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold text-dark mb-1">
+                                <i class="fas fa-dumbbell text-primary me-2"></i>@appointment.Service.Name
+                            </h5>
+                            @if (!string.IsNullOrEmpty(appointment.Service.Description))
+                            {
+                                <p class="text-muted small mb-0">@appointment.Service.Description</p>
+                            }
+                        </div>
+                        
+                        <!-- Trainer Info -->
+                        <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-3">
+                            <div class="trainer-avatar bg-primary text-white me-3">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">@appointment.Trainer.FirstName @appointment.Trainer.LastName</h6>
+                                <small class="text-muted">
+                                    <i class="fas fa-star text-warning me-1"></i>@appointment.Trainer.Specialization?.Split(',').FirstOrDefault()
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <!-- Time & Duration -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-4">
+                                <div class="time-badge">
+                                    <i class="fas fa-clock text-primary mb-2 d-block"></i>
+                                    <small class="text-muted d-block">Saat</small>
+                                    <strong>@appointment.StartTime.ToString(@"hh\:mm")</strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="time-badge">
+                                    <i class="fas fa-hourglass-half text-info mb-2 d-block"></i>
+                                    <small class="text-muted d-block">Süre</small>
+                                    <strong>@appointment.Service.Duration dk</strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="time-badge">
+                                    <i class="fas fa-tag text-success mb-2 d-block"></i>
+                                    <small class="text-muted d-block">Ücret</small>
+                                    <strong>₺@appointment.TotalPrice</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Notes -->
+                        @if (!string.IsNullOrEmpty(appointment.Notes))
+                        {
+                            <div class="alert alert-light border-start border-4 border-primary mb-0">
+                                <i class="fas fa-sticky-note text-primary me-2"></i>
+                                <small>@appointment.Notes</small>
+                            </div>
+                        }
+                    </div>
+                    
+                    <!-- Card Footer -->
+                    <div class="card-footer bg-white border-0 p-4 pt-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="far fa-clock me-1"></i>@appointment.CreatedAt.ToString("dd.MM.yyyy")
+                            </small>
+                            <div class="btn-group">
+                                <a asp-action="Details" asp-route-id="@appointment.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    <i class="fas fa-eye me-1"></i>Detay
+                                </a>
+                                @if (appointment.Status == GymManagementSystem.Models.AppointmentStatus.Pending || 
+                                     (appointment.Status == GymManagementSystem.Models.AppointmentStatus.Confirmed && appointment.AppointmentDate > DateTime.Now))
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 ms-2" onclick="cancelAppointment(@appointment.Id)">
+                                        <i class="fas fa-times me-1"></i>İptal
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Bu kategoride randevu bulunmuyor</h5>
+        <p class="text-muted mb-0">Farklı bir kategori seçebilir veya yeni randevu alabilirsiniz.</p>
+    </div>
+}
+
+@functions {
+    private string GetStatusClass(GymManagementSystem.Models.AppointmentStatus status)
+    {
+        return status switch
+        {
+            GymManagementSystem.Models.AppointmentStatus.Pending => "status-pending",
+            GymManagementSystem.Models.AppointmentStatus.Confirmed => "status-confirmed",
+            GymManagementSystem.Models.AppointmentStatus.Cancelled => "status-cancelled",
+            GymManagementSystem.Models.AppointmentStatus.Completed => "status-completed",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetStatusText(GymManagementSystem.Models.AppointmentStatus status)
+    {
+        return status switch
+        {
+            GymManagementSystem.Models.AppointmentStatus.Pending => "Bekliyor",
+            GymManagementSystem.Models.AppointmentStatus.Confirmed => "Onaylandı",
+            GymManagementSystem.Models.AppointmentStatus.Cancelled => "İptal Edildi",
+            GymManagementSystem.Models.AppointmentStatus.Completed => "Tamamlandı",
+            _ => "Bilinmiyor"
+        };
+    }
+
+    private string GetStatusIcon(GymManagementSystem.Models.AppointmentStatus status)
+    {
+        return status switch
+        {
+            GymManagementSystem.Models.AppointmentStatus.Pending => "fas fa-hourglass-half",
+            GymManagementSystem.Models.AppointmentStatus.Confirmed => "fas fa-check-circle",
+            GymManagementSystem.Models.AppointmentStatus.Cancelled => "fas fa-times-circle",
+            GymManagementSystem.Models.AppointmentStatus.Completed => "fas fa-flag-checkered",
+            _ => "fas fa-question-circle"
+        };
+    }
+}
+
+<script>
+    function cancelAppointment(id) {
+        if (confirm('Bu randevuyu iptal etmek istediğinizden emin misiniz?')) {
+            // Create a form and submit it
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '@Url.Action("Cancel", "Appointments")';
+            
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'id';
+            input.value = id;
+            form.appendChild(input);
+            
+            // Add anti-forgery token
+            var token = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (token) {
+                var tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = token.value;
+                form.appendChild(tokenInput);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>

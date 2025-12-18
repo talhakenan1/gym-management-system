@@ -1,0 +1,133 @@
+@model IEnumerable<GymManagementSystem.Models.AIRecommendation>
+
+@{
+    ViewData["Title"] = "AI Önerilerim";
+}
+
+<div class="container py-5">
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-8">
+            <h1 class="display-5 fw-bold text-primary"><i class="fas fa-robot me-3"></i>AI Önerilerim</h1>
+            <p class="lead text-muted">Yapay zeka destekli kişiselleştirilmiş sağlık rehberiniz</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a asp-action="Create" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+                <i class="fas fa-magic me-2"></i>Yeni Analiz Başlat
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-light rounded-3">
+            <div class="mb-4">
+                <i class="fas fa-brain fa-5x text-primary opacity-50"></i>
+            </div>
+            <h3 class="text-muted fw-light">Henüz bir analiziniz yok</h3>
+            <p class="text-muted mb-4">Size özel beslenme ve egzersiz planı oluşturmak için hemen başlayın.</p>
+            <a asp-action="Create" class="btn btn-outline-primary rounded-pill px-4">
+                <i class="fas fa-play me-2"></i>İlk Analizi Oluştur
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-hover overflow-hidden">
+                        @if (!string.IsNullOrEmpty(item.PhotoPath))
+                        {
+                            <div class="position-relative" style="height: 200px;">
+                                <img src="@item.PhotoPath" class="w-100 h-100 object-fit-cover" alt="Analiz Fotoğrafı">
+                                <div class="position-absolute top-0 end-0 p-3">
+                                    <span class="badge bg-light text-dark shadow-sm">
+                                        <i class="fas fa-camera me-1"></i>Fotoğraflı
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-file-alt fa-4x text-muted opacity-25"></i>
+                            </div>
+                        }
+                        
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge rounded-pill px-3 py-2 
+                                    @(item.Type == RecommendationType.Exercise ? "bg-success-subtle text-success" : 
+                                      item.Type == RecommendationType.Diet ? "bg-warning-subtle text-warning" : "bg-primary-subtle text-primary")">
+                                    <i class="fas fa-@(item.Type == RecommendationType.Exercise ? "dumbbell" : item.Type == RecommendationType.Diet ? "carrot" : "layer-group") me-1"></i>
+                                    @(item.Type == RecommendationType.Exercise ? "Egzersiz" : item.Type == RecommendationType.Diet ? "Beslenme" : "Kombine")
+                                </span>
+                                <small class="text-muted"><i class="far fa-calendar me-1"></i>@item.CreatedAt.ToString("dd.MM.yyyy")</small>
+                            </div>
+                            
+                            <h5 class="card-title fw-bold mb-3">
+                                @(item.FitnessGoal.HasValue ? item.FitnessGoal.Value.ToString() : "Genel Fitness") Hedefi
+                            </h5>
+                            
+                            <div class="d-flex gap-2 mb-4 text-muted small">
+                                @if (item.Age.HasValue) { <span><i class="fas fa-birthday-cake me-1"></i>@item.Age</span> }
+                                @if (item.Height.HasValue) { <span><i class="fas fa-ruler-vertical me-1"></i>@item.Height cm</span> }
+                                @if (item.Weight.HasValue) { <span><i class="fas fa-weight me-1"></i>@item.Weight kg</span> }
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    İncele <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.Id">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteModal-@item.Id" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow">
+                            <div class="modal-body text-center p-5">
+                                <div class="mb-4">
+                                    <i class="fas fa-exclamation-circle fa-4x text-warning"></i>
+                                </div>
+                                <h4 class="mb-3">Silmek istediğinize emin misiniz?</h4>
+                                <p class="text-muted mb-4">Bu analiz kaydı kalıcı olarak silinecek ve geri getirilemeyecektir.</p>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">İptal</button>
+                                    <form asp-action="Delete" asp-route-id="@item.Id">
+                                        <button type="submit" class="btn btn-danger rounded-pill px-4">Evet, Sil</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .bg-success-subtle { background-color: #d1e7dd !important; }
+    .bg-warning-subtle { background-color: #fff3cd !important; }
+    .bg-primary-subtle { background-color: #cfe2ff !important; }
+    .text-success { color: #146c43 !important; }
+    .text-warning { color: #997404 !important; }
+    .text-primary { color: #0a58ca !important; }
+    
+    .shadow-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .shadow-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+    }
+    .object-fit-cover { object-fit: cover; }
+</style>

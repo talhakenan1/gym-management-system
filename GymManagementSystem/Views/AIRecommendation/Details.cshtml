@@ -1,0 +1,173 @@
+@model GymManagementSystem.Models.AIRecommendation
+
+@{
+    ViewData["Title"] = "Analiz Sonuçları";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill mb-3"><i class="fas fa-arrow-left me-2"></i>Geri Dön</a>
+            <h1 class="display-5 fw-bold text-primary">Analiz Sonuçları</h1>
+            <p class="text-muted">@Model.CreatedAt.ToString("dd MMMM yyyy HH:mm") tarihli analiz raporunuz</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-outline-primary rounded-circle p-3" title="Yazdır">
+                <i class="fas fa-print"></i>
+            </button>
+            <form asp-action="Delete" asp-route-id="@Model.Id" onsubmit="return confirm('Bu analizi silmek istediğinize emin misiniz?');">
+                <button type="submit" class="btn btn-outline-danger rounded-circle p-3" title="Sil">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Sol Kolon: Profil Kartı -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 sticky-top" style="top: 100px; z-index: 1;">
+                <div class="card-header bg-primary text-white p-4 text-center">
+                    <div class="avatar-circle bg-white text-primary mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; border-radius: 50%;">
+                        <i class="fas fa-user fa-2x"></i>
+                    </div>
+                    <h5 class="mb-0">Kullanıcı Profili</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="vstack gap-3">
+                        <div class="d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-muted">Yaş / Cinsiyet</span>
+                            <span class="fw-medium">@Model.Age / @Model.Gender</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-muted">Vücut Ölçüleri</span>
+                            <span class="fw-medium">@Model.Height cm / @Model.Weight kg</span>
+                        </div>
+                        @if (Model.Height.HasValue && Model.Weight.HasValue)
+                        {
+                            var bmi = (float)(Model.Weight.Value / ((decimal)Model.Height.Value / 100 * (decimal)Model.Height.Value / 100));
+                            <div class="d-flex justify-content-between border-bottom pb-2">
+                                <span class="text-muted">BMI (Vücut Kitle İndeksi)</span>
+                                <span class="fw-bold @(bmi < 18.5 || bmi > 25 ? "text-warning" : "text-success")">@bmi.ToString("F1")</span>
+                            </div>
+                        }
+                        <div class="d-flex justify-content-between border-bottom pb-2">
+                            <span class="text-muted">Hedef</span>
+                            <span class="badge bg-primary-subtle text-primary">@Model.FitnessGoal</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Aktivite</span>
+                            <span class="badge bg-secondary-subtle text-secondary">@Model.ActivityLevel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sağ Kolon: Öneriler -->
+        <div class="col-lg-8">
+            @if (!string.IsNullOrEmpty(Model.ExerciseRecommendations))
+            {
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-white p-4 border-bottom-0">
+                        <h4 class="fw-bold text-success mb-0"><i class="fas fa-dumbbell me-2"></i>Egzersiz Programı</h4>
+                    </div>
+                    <div class="card-body p-4 pt-0">
+                        <div class="recommendation-content markdown-body">
+                            @Html.Raw(Model.ExerciseRecommendations.Replace("\n", "<br>"))
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.DietRecommendations))
+            {
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-white p-4 border-bottom-0">
+                        <h4 class="fw-bold text-warning mb-0"><i class="fas fa-utensils me-2"></i>Beslenme Planı</h4>
+                    </div>
+                    <div class="card-body p-4 pt-0">
+                        <div class="recommendation-content markdown-body">
+                            @Html.Raw(Model.DietRecommendations.Replace("\n", "<br>"))
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.PhotoAnalysis))
+            {
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-white p-4 border-bottom-0">
+                        <h4 class="fw-bold text-info mb-0"><i class="fas fa-camera me-2"></i>Görsel Analiz</h4>
+                    </div>
+                    <div class="card-body p-4 pt-0">
+                        <div class="row align-items-start">
+                            @if (!string.IsNullOrEmpty(Model.PhotoPath))
+                            {
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <img src="@Model.PhotoPath" class="img-fluid rounded-3 shadow-sm" alt="Analiz Edilen Fotoğraf">
+                                </div>
+                            }
+                            <div class="col-md-@(string.IsNullOrEmpty(Model.PhotoPath) ? "12" : "8")">
+                                <div class="recommendation-content">
+                                    @Html.Raw(Model.PhotoAnalysis.Replace("\n", "<br>"))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.GeneratedImagePath))
+            {
+                <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden bg-primary text-white">
+                    <div class="row g-0">
+                        <div class="col-md-6 p-4 d-flex flex-column justify-content-center">
+                            <h4 class="fw-bold mb-3"><i class="fas fa-magic me-2"></i>Gelecekteki Sen</h4>
+                            <p class="opacity-75 mb-0">Yapay zeka tarafından hedeflerinize ulaştığınızda nasıl görünebileceğinize dair oluşturulan tahmini görselleştirme.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <img src="@Model.GeneratedImagePath" class="w-100 h-100 object-fit-cover" alt="AI Generated Future Self" style="min-height: 300px;">
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            @if (!string.IsNullOrEmpty(Model.GeneralAdvice))
+            {
+                <div class="alert alert-light border-start border-5 border-info shadow-sm rounded-3 p-4">
+                    <h5 class="alert-heading fw-bold text-info mb-3"><i class="fas fa-lightbulb me-2"></i>Genel Tavsiyeler</h5>
+                    <div class="recommendation-content">
+                        @Html.Raw(Model.GeneralAdvice.Replace("\n", "<br>"))
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .recommendation-content {
+            line-height: 1.7;
+            color: #495057;
+        }
+        .recommendation-content strong {
+            color: #212529;
+            font-weight: 600;
+        }
+        .recommendation-content h1, .recommendation-content h2, .recommendation-content h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #333;
+        }
+        /* Print Styles */
+        @@media print {
+            body { background-color: white !important; }
+            .btn, header, footer { display: none !important; }
+            .card { box-shadow: none !important; border: 1px solid #ddd !important; break-inside: avoid; }
+            .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; }
+        }
+    </style>
+}

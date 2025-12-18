@@ -123,15 +123,36 @@ Proje ilk çalıştırıldığında otomatik olarak şu test verileri oluşturul
 
 ## 🔧 Geliştirme Notları
 
+### Yeni Eklenen Özellikler (Faz 4)
+- ✅ **REST API**: LINQ filtreleme ile API endpoint'leri
+- ✅ **Yapay Zeka Entegrasyonu**: OpenAI ile kişiselleştirilmiş öneriler
+- ✅ **Fotoğraf Yükleme**: AI destekli görsel analiz
+- ✅ **API Authentication**: Güvenli API erişimi
+
 ### Gelecek Özellikler
-- [ ] REST API geliştirme
-- [ ] Yapay zeka entegrasyonu
 - [ ] Ödeme sistemi entegrasyonu
 - [ ] Email bildirimleri
 - [ ] Raporlama sistemi
-- [ ] Mobil uygulama API'si
+- [ ] Mobil uygulama geliştirme
+
+## 🤖 API Endpoints
+
+### REST API Özellikleri
+- **GET /api/trainers**: Tüm antrenörleri listele
+- **GET /api/trainers/available/{date}**: Belirli tarihteki uygun antrenörleri getir (LINQ filtreleme)
+- **GET /api/services**: Tüm hizmetleri listele
+- **GET /api/services/category/{category}**: Kategoriye göre hizmetleri getir (LINQ filtreleme)
+- **GET /api/appointments/user/{userId}**: Kullanıcı randevularını getir (Authentication gerekli)
+- **GET /api/appointments/statistics**: Randevu istatistikleri (Admin only)
+
+### AI Özellikleri
+- **Kişiselleştirilmiş Egzersiz Önerileri**: Yaş, boy, kilo ve hedeflere göre
+- **Beslenme Planları**: BMI ve aktivite seviyesine göre özel diyet önerileri
+- **Fotoğraf Analizi**: Yüklenen fotoğraflar için AI destekli vücut analizi
+- **Kombine Öneriler**: Egzersiz ve beslenme önerilerini birleştiren kapsamlı planlar
 
 ### Bilinen Sorunlar
+- OpenAI API key'i yapılandırılması gerekiyor (appsettings.json)
 - Şu anda tek spor salonu desteği
 - Ödeme sistemi entegre değil
 - Email bildirimleri aktif değil

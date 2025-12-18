@@ -2,27 +2,48 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
+<ul class="navbar-nav ms-auto">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-            Merhaba @User.Identity?.Name!
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center text-dark fw-medium" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 14px;">
+                <i class="fas fa-user"></i>
+            </div>
+            <span class="d-none d-md-inline">@User.Identity?.Name</span>
         </a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button type="submit" class="nav-link btn btn-link text-dark">Çıkış Yap</button>
-        </form>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
+            <li class="px-3 py-2 border-bottom">
+                <small class="text-muted">Hoş geldiniz</small>
+                <div class="fw-bold text-truncate" style="max-width: 200px;">@User.Identity?.Name</div>
+            </li>
+            <li>
+                <a class="dropdown-item py-2" asp-area="Identity" asp-page="/Account/Manage/Index">
+                    <i class="fas fa-user-cog me-2 text-primary"></i>Hesap Ayarları
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="dropdown-item py-2 text-danger">
+                        <i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap
+                    </button>
+                </form>
+            </li>
+        </ul>
     </li>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Kayıt Ol</a>
+    <li class="nav-item d-flex align-items-center">
+        <a class="btn btn-outline-primary btn-sm px-3" asp-area="Identity" asp-page="/Account/Register">
+            <i class="fas fa-user-plus me-1"></i>Kayıt Ol
+        </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
+    <li class="nav-item d-flex align-items-center ms-2">
+        <a class="btn btn-primary btn-sm px-3" asp-area="Identity" asp-page="/Account/Login">
+            <i class="fas fa-sign-in-alt me-1"></i>Giriş Yap
+        </a>
     </li>
 }
 </ul>

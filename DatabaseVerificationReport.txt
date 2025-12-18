@@ -1,0 +1,71 @@
+Changed database context to 'GymManagementSystemDb'.
+========================================
+VERÄ°TABANI DOÄ?RULAMA RAPORU
+========================================
+ 
+1. SERVICES TABLOSU:
+--------------------
+Id          Name                                                                                                 Category                                           Price        Duration    IsActive
+----------- ---------------------------------------------------------------------------------------------------- -------------------------------------------------- ------------ ----------- --------
+          1 Personal Training                                                                                    Fitness                                                  150.00          60        1
+          2 Group Fitness                                                                                        Fitness                                                   50.00          45        1
+          3 Yoga Class                                                                                           Yoga                                                      75.00          60        1
+          4 Cardio Training                                                                                      Cardio                                                    40.00          30        1
+          5 Weight Training                                                                                      Strength                                                  60.00          45        1
+
+(5 rows affected)
+ 
+Services Ã–zet:
+Bilgi         Sayi       
+------------- -----------
+Toplam Hizmet           5
+Category Dolu           5
+Category BoÅŸ           0
+
+(3 rows affected)
+ 
+2. TRAINER AVAILABILITIES TABLOSU:
+-----------------------------------
+Id          Antrenor                                                                                              Gun        BaslangicSaati BitisSaati Musait Aktif
+----------- ----------------------------------------------------------------------------------------------------- ---------- -------------- ---------- ------ -----
+          1 Ahmet Yýlmaz                                                                                          Pazartesi  09:00          17:00           1     1
+          2 Ahmet Yýlmaz                                                                                          SalÄ±      09:00          17:00           1     1
+          3 Ahmet Yýlmaz                                                                                          Ã‡arÅŸamba 09:00          17:00           1     1
+          4 Ahmet Yýlmaz                                                                                          PerÅŸembe  09:00          17:00           1     1
+          5 Ahmet Yýlmaz                                                                                          Cuma       09:00          17:00           1     1
+          6 Ayþe Demir                                                                                            SalÄ±      10:00          18:00           1     1
+          7 Ayþe Demir                                                                                            Ã‡arÅŸamba 10:00          18:00           1     1
+          8 Ayþe Demir                                                                                            PerÅŸembe  10:00          18:00           1     1
+          9 Ayþe Demir                                                                                            Cuma       10:00          18:00           1     1
+         10 Ayþe Demir                                                                                            Cumartesi  10:00          18:00           1     1
+         11 Mehmet Kaya                                                                                           Pazartesi  08:00          16:00           1     1
+         12 Mehmet Kaya                                                                                           SalÄ±      08:00          16:00           1     1
+         13 Mehmet Kaya                                                                                           Ã‡arÅŸamba 08:00          16:00           1     1
+         14 Mehmet Kaya                                                                                           PerÅŸembe  08:00          16:00           1     1
+         15 Mehmet Kaya                                                                                           Cuma       08:00          16:00           1     1
+         16 Mehmet Kaya                                                                                           Cumartesi  08:00          16:00           1     1
+
+(16 rows affected)
+ 
+TrainerAvailabilities Ã–zet:
+Bilgi                     Sayi       
+------------------------- -----------
+Toplam MÃ¼saitlik                  16
+IsAvailable = 1                    16
+IsAvailable = 0 veya NULL           0
+
+(3 rows affected)
+ 
+3. TRAINERS TABLOSU:
+--------------------
+Id          AdSoyad                                                                                               Email                                                                                                Specialization                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Experience  IsActive
+----------- ----------------------------------------------------------------------------------------------------- ---------------------------------------------------------------------------------------------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ----------- --------
+          1 Ahmet Yýlmaz                                                                                          ahmet@fitlifegym.com                                                                                 Personal Training, Weight Training                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             5        1
+          2 Ayþe Demir                                                                                            ayse@fitlifegym.com                                                                                  Yoga, Group Fitness                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            3        1
+          3 Mehmet Kaya                                                                                           mehmet@fitlifegym.com                                                                                Cardio Training, Personal Training                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             7        1
+
+(3 rows affected)
+ 
+========================================
+DOÄ?RULAMA TAMAMLANDI
+========================================

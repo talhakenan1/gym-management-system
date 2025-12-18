@@ -23,6 +23,12 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+// Add AI Services
+builder.Services.AddHttpClient<GymManagementSystem.Services.OpenAIService>();
+builder.Services.AddScoped<GymManagementSystem.Services.OpenAIService>();
+builder.Services.AddHttpClient<GymManagementSystem.Services.GeminiService>();
+builder.Services.AddScoped<GymManagementSystem.Services.GeminiService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,0 +1,56 @@
+@page
+@model EmailModel
+@{
+    ViewData["Title"] = "E-posta Yönetimi";
+}
+
+<div class="d-flex align-items-center mb-4">
+    <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+        <i class="fas fa-envelope fa-2x"></i>
+    </div>
+    <div>
+        <h4 class="mb-1 fw-bold">E-posta Ayarları</h4>
+        <p class="text-muted mb-0">E-posta adresinizi yönetin</p>
+    </div>
+</div>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<form id="email-form" method="post">
+    <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+    
+    <div class="row g-3">
+        <div class="col-md-8">
+            <div class="form-floating mb-3">
+                <input asp-for="Email" class="form-control bg-light" disabled />
+                <label asp-for="Email" class="form-label"><i class="fas fa-envelope me-2"></i>Mevcut E-posta</label>
+            </div>
+        </div>
+        <div class="col-md-4 d-flex align-items-center">
+            @if (Model.IsEmailConfirmed)
+            {
+                <span class="badge bg-success p-2">
+                    <i class="fas fa-check-circle me-1"></i>Doğrulanmış
+                </span>
+            }
+            else
+            {
+                <span class="badge bg-warning text-dark p-2">
+                    <i class="fas fa-exclamation-triangle me-1"></i>Doğrulanmamış
+                </span>
+            }
+        </div>
+    </div>
+    
+    <div class="card bg-light border-0 p-3 mb-4">
+        <p class="text-muted small mb-0">
+            <i class="fas fa-info-circle me-2"></i>
+            E-posta adresiniz hesabınıza giriş yapmak ve önemli bildirimleri almak için kullanılır.
+        </p>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

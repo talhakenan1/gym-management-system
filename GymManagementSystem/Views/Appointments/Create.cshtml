@@ -1,0 +1,263 @@
+@model GymManagementSystem.Models.Appointment
+
+@{
+    ViewData["Title"] = "Yeni Randevu Al";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                <div class="card-header bg-primary text-white p-4 text-center">
+                    <h3 class="mb-0 fw-bold"><i class="fas fa-calendar-plus me-2"></i>Yeni Randevu Oluştur</h3>
+                    <p class="mb-0 opacity-75 mt-2">Size uygun zamanı seçin ve antrenmanınızı planlayın</p>
+                </div>
+                <div class="card-body p-5">
+                    <form asp-action="Create" method="post" id="appointmentForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 shadow-sm" role="alert"></div>
+                        
+                        <!-- Steps Indicator (Optional visual enhancement) -->
+                        <div class="d-flex justify-content-between mb-5 position-relative">
+                            <div class="progress position-absolute top-50 start-0 w-100" style="height: 2px; z-index: 0;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%;" id="progressBar"></div>
+                            </div>
+                            <div class="position-relative z-1 bg-white px-2 text-center step-item active" id="step1-indicator">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 30px; height: 30px;">1</div>
+                                <small class="fw-bold text-primary">Hizmet</small>
+                            </div>
+                            <div class="position-relative z-1 bg-white px-2 text-center step-item" id="step2-indicator">
+                                <div class="rounded-circle bg-light text-muted d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 30px; height: 30px;">2</div>
+                                <small class="text-muted">Eğitmen</small>
+                            </div>
+                            <div class="position-relative z-1 bg-white px-2 text-center step-item" id="step3-indicator">
+                                <div class="rounded-circle bg-light text-muted d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 30px; height: 30px;">3</div>
+                                <small class="text-muted">Zaman</small>
+                            </div>
+                        </div>
+
+                        <!-- Service Selection -->
+                        <div class="form-floating mb-4">
+                            <select asp-for="ServiceId" class="form-select border-0 border-bottom rounded-0 shadow-none" asp-items="ViewBag.ServiceId" id="serviceSelect" style="border-bottom: 2px solid #dee2e6 !important;">
+                                <option value="">Seçiniz...</option>
+                            </select>
+                            <label asp-for="ServiceId" class="text-muted"><i class="fas fa-dumbbell me-2"></i>Hizmet Seçin</label>
+                            <span asp-validation-for="ServiceId" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Trainer Selection -->
+                        <div class="form-floating mb-4">
+                            <select asp-for="TrainerId" class="form-select border-0 border-bottom rounded-0 shadow-none" id="trainerSelect" disabled style="border-bottom: 2px solid #dee2e6 !important;">
+                                <option value="">Önce hizmet seçin</option>
+                            </select>
+                            <label asp-for="TrainerId" class="text-muted"><i class="fas fa-user-tie me-2"></i>Eğitmen Seçin</label>
+                            <span asp-validation-for="TrainerId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3">
+                            <!-- Date Selection -->
+                            <div class="col-md-6">
+                                <div class="form-floating mb-4">
+                                    <input asp-for="AppointmentDate" class="form-control border-0 border-bottom rounded-0 shadow-none" type="date" id="dateInput" min="@DateTime.Today.ToString("yyyy-MM-dd")" style="border-bottom: 2px solid #dee2e6 !important;" />
+                                    <label asp-for="AppointmentDate" class="text-muted"><i class="fas fa-calendar-day me-2"></i>Tarih</label>
+                                    <span asp-validation-for="AppointmentDate" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <!-- Time Selection -->
+                            <div class="col-md-6">
+                                <div class="form-floating mb-4">
+                                    <select asp-for="StartTime" class="form-select border-0 border-bottom rounded-0 shadow-none" id="timeSelect" disabled style="border-bottom: 2px solid #dee2e6 !important;">
+                                        <option value="">Seçiniz...</option>
+                                    </select>
+                                    <label asp-for="StartTime" class="text-muted"><i class="fas fa-clock me-2"></i>Saat</label>
+                                    <span asp-validation-for="StartTime" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Notes" class="form-control border-0 border-bottom rounded-0 shadow-none" placeholder="Varsa notlarınız..." style="height: 100px; border-bottom: 2px solid #dee2e6 !important;"></textarea>
+                            <label asp-for="Notes" class="text-muted"><i class="fas fa-sticky-note me-2"></i>Notlar (İsteğe bağlı)</label>
+                        </div>
+
+                        <!-- Summary Card -->
+                        <div class="card bg-light border-0 rounded-3 mb-4 collapse" id="appointmentSummary">
+                            <div class="card-body">
+                                <h6 class="card-title fw-bold text-primary mb-3"><i class="fas fa-info-circle me-2"></i>Randevu Özeti</h6>
+                                <div class="row g-2 small text-muted">
+                                    <div class="col-6">Hizmet: <strong class="text-dark" id="summary-service">-</strong></div>
+                                    <div class="col-6">Eğitmen: <strong class="text-dark" id="summary-trainer">-</strong></div>
+                                    <div class="col-6">Tarih: <strong class="text-dark" id="summary-date">-</strong></div>
+                                    <div class="col-6">Saat: <strong class="text-dark" id="summary-time">-</strong></div>
+                                    <div class="col-6">Süre: <strong class="text-dark" id="summary-duration">-</strong></div>
+                                    <div class="col-6">Fiyat: <strong class="text-success fs-6" id="summary-price">-</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm" id="submitBtn" disabled>
+                                <i class="fas fa-check-circle me-2"></i>Randevuyu Onayla
+                            </button>
+                            <a asp-action="Index" class="btn btn-light text-muted rounded-pill">İptal Et</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            let servicesData = @Html.Raw(Json.Serialize(ViewBag.Services ?? new List<object>()));
+            let selectedService = null;
+            let selectedTrainer = null;
+
+            // Progress Bar Logic
+            function updateProgress() {
+                let progress = 0;
+                if ($('#serviceSelect').val()) progress = 33;
+                if ($('#trainerSelect').val()) progress = 66;
+                if ($('#timeSelect').val()) progress = 100;
+                
+                $('#progressBar').css('width', progress + '%');
+                
+                if(progress >= 33) { $('#step1-indicator div').removeClass('bg-light text-muted').addClass('bg-primary text-white'); $('#step1-indicator small').removeClass('text-muted').addClass('text-primary'); }
+                if(progress >= 66) { $('#step2-indicator div').removeClass('bg-light text-muted').addClass('bg-primary text-white'); $('#step2-indicator small').removeClass('text-muted').addClass('text-primary'); }
+                else { $('#step2-indicator div').removeClass('bg-primary text-white').addClass('bg-light text-muted'); $('#step2-indicator small').removeClass('text-primary').addClass('text-muted'); }
+                if(progress >= 100) { $('#step3-indicator div').removeClass('bg-light text-muted').addClass('bg-primary text-white'); $('#step3-indicator small').removeClass('text-muted').addClass('text-primary'); }
+                else { $('#step3-indicator div').removeClass('bg-primary text-white').addClass('bg-light text-muted'); $('#step3-indicator small').removeClass('text-primary').addClass('text-muted'); }
+            }
+
+            $('#serviceSelect').change(function() {
+                const serviceId = $(this).val();
+                updateProgress();
+                if (serviceId) {
+                    const service = servicesData.find(s => s.id == serviceId);
+                    
+                    $.get('@Url.Action("GetAvailableTrainers", "Appointments")', { serviceId: serviceId })
+                        .done(function(trainers) {
+                            $('#trainerSelect').empty().append('<option value="">Seçiniz...</option>');
+                            if (trainers && trainers.length > 0) {
+                                trainers.forEach(function(trainer) {
+                                    $('#trainerSelect').append(`<option value="${trainer.value}">${trainer.text}</option>`);
+                                });
+                                $('#trainerSelect').prop('disabled', false);
+                            } else {
+                                $('#trainerSelect').append('<option value="">Eğitmen bulunamadı</option>');
+                            }
+                            
+                            selectedService = {
+                                id: serviceId,
+                                name: $('#serviceSelect option:selected').text(),
+                                duration: service ? service.duration : 60,
+                                price: service ? service.price : 0
+                            };
+                            updateSummary();
+                        });
+                } else {
+                    $('#trainerSelect').empty().append('<option value="">Önce hizmet seçin</option>').prop('disabled', true);
+                    $('#timeSelect').empty().append('<option value="">Önce tarih ve eğitmen</option>').prop('disabled', true);
+                    selectedService = null;
+                    updateSummary();
+                }
+            });
+
+            $('#trainerSelect').change(function() {
+                const trainerId = $(this).val();
+                updateProgress();
+                const trainerText = $('#trainerSelect option:selected').text();
+                
+                if (trainerId && trainerText !== 'Seçiniz...') {
+                    selectedTrainer = { id: trainerId, name: trainerText };
+                    checkAvailability();
+                } else {
+                    selectedTrainer = null;
+                    $('#timeSelect').empty().append('<option value="">Önce eğitmen seçin</option>').prop('disabled', true);
+                }
+                updateSummary();
+            });
+
+            $('#dateInput').change(function() {
+                checkAvailability();
+                updateSummary();
+            });
+
+            $('#timeSelect').change(function() {
+                updateProgress();
+                updateSummary();
+            });
+
+            function checkAvailability() {
+                const trainerId = $('#trainerSelect').val();
+                const date = $('#dateInput').val();
+                
+                if (trainerId && date && selectedService) {
+                    generateTimeSlots();
+                }
+            }
+
+            function generateTimeSlots() {
+                const trainerId = $('#trainerSelect').val();
+                const date = $('#dateInput').val();
+                const duration = selectedService ? selectedService.duration : 60;
+                
+                $('#timeSelect').empty().append('<option value="">Yükleniyor...</option>').prop('disabled', true);
+                
+                $.get('@Url.Action("GetAvailableTimeSlots", "Appointments")', { 
+                    trainerId: trainerId, 
+                    date: date, 
+                    duration: duration 
+                })
+                .done(function(timeSlots) {
+                    $('#timeSelect').empty().append('<option value="">Seçiniz...</option>');
+                    
+                    if (timeSlots && timeSlots.length > 0) {
+                        timeSlots.forEach(function(slot) {
+                            $('#timeSelect').append(`<option value="${slot.value}">${slot.text}</option>`);
+                        });
+                        $('#timeSelect').prop('disabled', false);
+                    } else {
+                        $('#timeSelect').append('<option value="">Müsait saat yok</option>');
+                    }
+                });
+            }
+
+            function updateSummary() {
+                const service = selectedService;
+                const trainer = selectedTrainer;
+                const date = $('#dateInput').val();
+                const time = $('#timeSelect').val();
+
+                $('#summary-service').text(service ? service.name : '-');
+                $('#summary-trainer').text(trainer ? trainer.name : '-');
+                $('#summary-date').text(date ? new Date(date).toLocaleDateString('tr-TR') : '-');
+                $('#summary-time').text(time ? time.substring(0, 5) : '-');
+                $('#summary-duration').text(service ? service.duration + ' dk' : '-');
+                $('#summary-price').text(service ? '₺' + service.price.toFixed(2) : '-');
+
+                if (service || trainer) {
+                    $('#appointmentSummary').collapse('show');
+                }
+
+                if (service && trainer && date && time) {
+                    $('#submitBtn').prop('disabled', false);
+                } else {
+                    $('#submitBtn').prop('disabled', true);
+                }
+            }
+        });
+    </script>
+    <style>
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label,
+        .form-floating > .form-select ~ label {
+            opacity: .65;
+            transform: scale(.85) translateY(-.5rem) translateX(.15rem);
+        }
+    </style>
+}

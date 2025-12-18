@@ -1,0 +1,285 @@
+@model IEnumerable<GymManagementSystem.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Randevularım";
+    var upcomingCount = Model.Count(a => a.AppointmentDate >= DateTime.Today && a.Status != GymManagementSystem.Models.AppointmentStatus.Cancelled);
+    var pendingCount = Model.Count(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Pending);
+    var completedCount = Model.Count(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Completed);
+    var totalCount = Model.Count();
+}
+
+<style>
+    .appointments-hero {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.7) 0%, rgba(37, 99, 235, 0.95) 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        color: white;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+    
+    .filter-pills {
+        background: white;
+        border-radius: 50px;
+        padding: 0.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        display: inline-flex;
+    }
+    
+    .filter-pills .nav-link {
+        border-radius: 50px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        color: #6c757d;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .filter-pills .nav-link:hover {
+        color: #2563eb;
+        background: rgba(37, 99, 235, 0.1);
+    }
+    
+    .filter-pills .nav-link.active {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.85) 0%, rgba(37, 99, 235, 1) 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    }
+    
+    .appointment-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .appointment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+    
+    .appointment-card .card-header {
+        padding: 1.25rem;
+        border: none;
+    }
+    
+    .status-pending { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+    .status-confirmed { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+    .status-cancelled { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); }
+    .status-completed { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+    
+    .trainer-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+    
+    .time-badge {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 0.75rem;
+        text-align: center;
+    }
+    
+    .empty-state {
+        background: white;
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .empty-state-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        color: #3b82f6;
+    }
+    
+    .btn-gradient {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 1) 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        color: white;
+    }
+</style>
+
+<div class="container py-4">
+    <!-- Hero Section -->
+    <div class="appointments-hero">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-calendar-alt me-3"></i>Randevularım
+                </h1>
+                <p class="lead opacity-75 mb-0">Tüm randevularınızı görüntüleyin, takip edin ve yönetin</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <a asp-action="Create" class="btn btn-light btn-lg rounded-pill shadow-sm">
+                    <i class="fas fa-plus me-2"></i>Yeni Randevu Al
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-primary bg-opacity-10 text-primary me-3">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold">@upcomingCount</h3>
+                        <small class="text-muted">Yaklaşan</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-warning bg-opacity-10 text-warning me-3">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold">@pendingCount</h3>
+                        <small class="text-muted">Bekleyen</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-success bg-opacity-10 text-success me-3">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold">@completedCount</h3>
+                        <small class="text-muted">Tamamlanan</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="stat-card">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-info bg-opacity-10 text-info me-3">
+                        <i class="fas fa-list-ul"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-0 fw-bold">@totalCount</h3>
+                        <small class="text-muted">Toplam</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <!-- Filter Pills -->
+        <div class="text-center mb-4">
+            <nav class="filter-pills">
+                <div class="nav nav-pills" id="appointmentTabs" role="tablist">
+                    <button class="nav-link active" id="upcoming-tab" data-bs-toggle="pill" data-bs-target="#upcoming" type="button" role="tab">
+                        <i class="fas fa-calendar-day me-2"></i>Yaklaşan
+                    </button>
+                    <button class="nav-link" id="pending-tab" data-bs-toggle="pill" data-bs-target="#pending" type="button" role="tab">
+                        <i class="fas fa-hourglass-half me-2"></i>Bekleyen
+                    </button>
+                    <button class="nav-link" id="completed-tab" data-bs-toggle="pill" data-bs-target="#completed" type="button" role="tab">
+                        <i class="fas fa-check-circle me-2"></i>Tamamlanan
+                    </button>
+                    <button class="nav-link" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab">
+                        <i class="fas fa-list-ul me-2"></i>Tümü
+                    </button>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="appointmentTabContent">
+            <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+                @await Html.PartialAsync("_UserAppointmentCards", Model.Where(a => a.AppointmentDate >= DateTime.Today && a.Status != GymManagementSystem.Models.AppointmentStatus.Cancelled).OrderBy(a => a.AppointmentDate))
+            </div>
+            <div class="tab-pane fade" id="pending" role="tabpanel">
+                @await Html.PartialAsync("_UserAppointmentCards", Model.Where(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Pending).OrderBy(a => a.AppointmentDate))
+            </div>
+            <div class="tab-pane fade" id="completed" role="tabpanel">
+                @await Html.PartialAsync("_UserAppointmentCards", Model.Where(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Completed).OrderByDescending(a => a.AppointmentDate))
+            </div>
+            <div class="tab-pane fade" id="all" role="tabpanel">
+                @await Html.PartialAsync("_UserAppointmentCards", Model.OrderByDescending(a => a.AppointmentDate))
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <h3 class="fw-bold mb-2">Henüz randevunuz bulunmuyor</h3>
+            <p class="text-muted mb-4">Fitness yolculuğunuza başlamak için ilk randevunuzu oluşturun!</p>
+            <a asp-action="Create" class="btn btn-gradient btn-lg">
+                <i class="fas fa-calendar-plus me-2"></i>İlk Randevumu Al
+            </a>
+        </div>
+    }
+</div>

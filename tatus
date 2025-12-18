@@ -1,0 +1,34 @@
+[1mdiff --git a/GymManagementSystem/Program.cs b/GymManagementSystem/Program.cs[m
+[1mindex 2a6d33b..b75581d 100644[m
+[1m--- a/GymManagementSystem/Program.cs[m
+[1m+++ b/GymManagementSystem/Program.cs[m
+[36m@@ -23,6 +23,12 @@[m [mbuilder.Services.AddDefaultIdentity<ApplicationUser>(options =>[m
+ builder.Services.AddControllersWithViews();[m
+ builder.Services.AddRazorPages();[m
+ [m
+[32m+[m[32m// Add AI Services[m
+[32m+[m[32mbuilder.Services.AddHttpClient<GymManagementSystem.Services.OpenAIService>();[m
+[32m+[m[32mbuilder.Services.AddScoped<GymManagementSystem.Services.OpenAIService>();[m
+[32m+[m[32mbuilder.Services.AddHttpClient<GymManagementSystem.Services.GeminiService>();[m
+[32m+[m[32mbuilder.Services.AddScoped<GymManagementSystem.Services.GeminiService>();[m
+[32m+[m
+ var app = builder.Build();[m
+ [m
+ // Configure the HTTP request pipeline.[m
+[1mdiff --git a/GymManagementSystem/appsettings.json b/GymManagementSystem/appsettings.json[m
+[1mindex 968f2f8..2cefc33 100644[m
+[1m--- a/GymManagementSystem/appsettings.json[m
+[1m+++ b/GymManagementSystem/appsettings.json[m
+[36m@@ -2,6 +2,12 @@[m
+   "ConnectionStrings": {[m
+     "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=GymManagementSystemDb;Trusted_Connection=true;MultipleActiveResultSets=true"[m
+   },[m
+[32m+[m[32m  "OpenAI": {[m
+[32m+[m[32m    "ApiKey": "your-openai-api-key-here"[m
+[32m+[m[32m  },[m
+[32m+[m[32m  "Gemini": {[m
+[32m+[m[32m    "ApiKey": "your-gemini-api-key-here"[m
+[32m+[m[32m  },[m
+   "Logging": {[m
+     "LogLevel": {[m
+       "Default": "Information",[m

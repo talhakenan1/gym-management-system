@@ -1,0 +1,75 @@
+@model GymManagementSystem.Models.AIRecommendation
+
+@{
+    ViewData["Title"] = "AI Önerisi Sil";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-exclamation-triangle"></i> AI Önerisi Sil</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Dikkat!</strong> Bu AI önerisini silmek istediğinizden emin misiniz?
+                    </div>
+
+                    <div class="mb-3">
+                        <h6>Öneri Detayları:</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Tür:</strong> 
+                                @switch (Model.Type)
+                                {
+                                    case RecommendationType.Exercise: <span class="badge bg-success">Egzersiz</span> break;
+                                    case RecommendationType.Diet: <span class="badge bg-info">Beslenme</span> break;
+                                    case RecommendationType.Combined: <span class="badge bg-primary">Kombine</span> break;
+                                }
+                            </li>
+                            @if (Model.FitnessGoal.HasValue)
+                            {
+                                <li><strong>Hedef:</strong> 
+                                    @switch (Model.FitnessGoal.Value)
+                                    {
+                                        case FitnessGoal.WeightLoss: <span>Kilo Verme</span> break;
+                                        case FitnessGoal.MuscleGain: <span>Kas Kazanımı</span> break;
+                                        case FitnessGoal.Endurance: <span>Dayanıklılık</span> break;
+                                        case FitnessGoal.Strength: <span>Güç Artırımı</span> break;
+                                        case FitnessGoal.GeneralFitness: <span>Genel Fitness</span> break;
+                                        case FitnessGoal.Flexibility: <span>Esneklik</span> break;
+                                    }
+                                </li>
+                            }
+                            <li><strong>Oluşturulma:</strong> @Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</li>
+                            @if (!string.IsNullOrEmpty(Model.PhotoPath))
+                            {
+                                <li><strong>Fotoğraf:</strong> <span class="text-success">Var</span></li>
+                            }
+                        </ul>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+                    {
+                        <div class="text-center mb-3">
+                            <img src="@Model.PhotoPath" class="img-thumbnail" style="max-height: 150px;" alt="Öneri Fotoğrafı">
+                        </div>
+                    }
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Evet, Sil
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> İptal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,9 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    var routeController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var routeAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+}
+<!DOCTYPE html>
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,55 +13,150 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GymManagementSystem.styles.css" asp-append-version="true" />
+    <style>
+        /* Navbar Styles */
+        .navbar-main {
+            min-height: 70px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-main.scrolled {
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-nav .nav-link {
+            padding: 0.6rem 1.1rem !important;
+            white-space: nowrap;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            position: relative;
+            font-weight: 500;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            background: rgba(13, 110, 253, 0.1);
+            color: #0d6efd !important;
+        }
+        
+        .navbar-nav .nav-link.active {
+            background: rgba(13, 110, 253, 0.15);
+            color: #0d6efd !important;
+        }
+        
+        .navbar-nav .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: #0d6efd;
+            border-radius: 2px;
+        }
+        
+        .navbar-nav .nav-item {
+            margin: 0 3px;
+        }
+        
+        .navbar .dropdown-menu {
+            min-width: 220px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 0.5rem;
+        }
+        
+        .navbar .dropdown-item {
+            border-radius: 8px;
+            margin: 2px 0;
+        }
+        
+        .navbar .dropdown-item:hover {
+            background: rgba(13, 110, 253, 0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.3rem;
+        }
+        
+        @@media (max-width: 991.98px) {
+            .navbar-nav {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            .navbar-nav .nav-item {
+                margin: 2px 0;
+            }
+            .navbar-nav .nav-link.active::after {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+        <nav class="navbar navbar-expand-lg navbar-light navbar-main border-bottom shadow-sm py-2 sticky-top">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                    <div class="bg-primary text-white rounded p-2 me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <a class="navbar-brand d-flex align-items-center fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
+                    <div class="bg-primary text-white rounded-3 p-2 me-2 d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
                         <i class="fas fa-dumbbell"></i>
                     </div>
-                    FitLife Gym
+                    <span class="text-primary">FitLife Gym</span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
-                    <ul class="navbar-nav">
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                            <a class="nav-link @(routeController.Equals("Home", StringComparison.OrdinalIgnoreCase) && routeAction.Equals("Index", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1 d-lg-none"></i>Ana Sayfa
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Trainers">Antrenörler</a>
+                            <a class="nav-link @(routeController.Equals("Home", StringComparison.OrdinalIgnoreCase) && routeAction.Equals("Trainers", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Trainers">
+                                <i class="fas fa-users me-1 d-lg-none"></i>Antrenörler
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Services">Hizmetler</a>
+                            <a class="nav-link @(routeController.Equals("Home", StringComparison.OrdinalIgnoreCase) && routeAction.Equals("Services", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Services">
+                                <i class="fas fa-dumbbell me-1 d-lg-none"></i>Hizmetler
+                            </a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Randevularım</a>
+                                <a class="nav-link @(routeController.Equals("Appointments", StringComparison.OrdinalIgnoreCase) && routeAction.Equals("Index", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-area="" asp-controller="Appointments" asp-action="Index">
+                                    <i class="fas fa-calendar me-1 d-lg-none"></i>Randevularım
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="AIRecommendation" asp-action="Index">Randevu AI</a>
+                                <a class="nav-link @(routeController.Equals("Appointments", StringComparison.OrdinalIgnoreCase) && routeAction.Equals("Create", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-area="" asp-controller="Appointments" asp-action="Create">
+                                    <i class="fas fa-calendar-plus me-1 d-lg-none"></i>Randevu Al
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="AIRecommendation" asp-action="Index">AI Önerileri</a>
+                                <a class="nav-link @(routeController.Equals("AIRecommendation", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-area="" asp-controller="AIRecommendation" asp-action="Index">
+                                    <i class="fas fa-robot me-1 d-lg-none"></i>AI Önerileri
+                                </a>
                             </li>
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
-                                        Admin Panel
+                                    <a class="nav-link dropdown-toggle @(routeController.Equals("Admin", StringComparison.OrdinalIgnoreCase) || routeController.Equals("Trainers", StringComparison.OrdinalIgnoreCase) || routeController.Equals("Services", StringComparison.OrdinalIgnoreCase) || routeController.Equals("TrainerAvailability", StringComparison.OrdinalIgnoreCase) ? "active" : "")" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-cog me-1 d-lg-none"></i>Admin Panel
                                     </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Dashboard</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Trainers" asp-action="Index">Antrenör Yönetimi</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Services" asp-action="Index">Hizmet Yönetimi</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Appointments">Randevu Yönetimi</a></li>
-                                        <li><a class="dropdown-item" asp-controller="TrainerAvailability" asp-action="Index">Müsaitlik Yönetimi</a></li>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="adminDropdown">
+                                        <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Index"><i class="fas fa-tachometer-alt me-2 text-primary"></i>Dashboard</a></li>
+                                        <li><hr class="dropdown-divider my-1"></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Trainers" asp-action="Index"><i class="fas fa-user-tie me-2 text-success"></i>Antrenör Yönetimi</a></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Services" asp-action="Index"><i class="fas fa-list me-2 text-info"></i>Hizmet Yönetimi</a></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Appointments"><i class="fas fa-calendar-check me-2 text-warning"></i>Randevu Yönetimi</a></li>
+                                        <li><a class="dropdown-item py-2" asp-controller="TrainerAvailability" asp-action="Index"><i class="fas fa-clock me-2 text-secondary"></i>Müsaitlik Yönetimi</a></li>
                                     </ul>
                                 </li>
                             }
@@ -81,6 +180,17 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Add scrolled class to navbar on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-main');
+            if (window.scrollY > 10) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

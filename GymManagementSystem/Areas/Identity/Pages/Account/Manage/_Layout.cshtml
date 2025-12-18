@@ -1,0 +1,55 @@
+@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2 class="fw-bold text-primary">
+                <i class="fas fa-user-cog me-2"></i>Hesap Ayarları
+            </h2>
+            <p class="text-muted">Hesap bilgilerinizi yönetin ve güvenlik ayarlarınızı düzenleyin.</p>
+        </div>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-3 col-md-4">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-header bg-primary text-white py-3">
+                    <h6 class="mb-0 fw-bold">
+                        <i class="fas fa-cog me-2"></i>Menü
+                    </h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a asp-page="./Index" class="list-group-item list-group-item-action d-flex align-items-center py-3 @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Index") == true ? "active" : "")">
+                        <i class="fas fa-user me-3 text-primary"></i>
+                        <span>Profil</span>
+                    </a>
+                    <a asp-page="./Email" class="list-group-item list-group-item-action d-flex align-items-center py-3 @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("Email") == true ? "active" : "")">
+                        <i class="fas fa-envelope me-3 text-info"></i>
+                        <span>E-posta</span>
+                    </a>
+                    <a asp-page="./ChangePassword" class="list-group-item list-group-item-action d-flex align-items-center py-3 @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("ChangePassword") == true ? "active" : "")">
+                        <i class="fas fa-key me-3 text-warning"></i>
+                        <span>Şifre Değiştir</span>
+                    </a>
+                    <a asp-page="./PersonalData" class="list-group-item list-group-item-action d-flex align-items-center py-3 @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("PersonalData") == true ? "active" : "")">
+                        <i class="fas fa-database me-3 text-secondary"></i>
+                        <span>Kişisel Veriler</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-8">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}
+

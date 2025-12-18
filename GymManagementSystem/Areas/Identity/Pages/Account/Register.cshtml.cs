@@ -46,57 +46,39 @@ namespace GymManagementSystem.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
+            [Required(ErrorMessage = "Ad alanı zorunludur")]
+            [StringLength(50, ErrorMessage = "Ad en fazla 50 karakter olabilir")]
+            [Display(Name = "Ad")]
+            public string FirstName { get; set; }
+
+            [Required(ErrorMessage = "Soyad alanı zorunludur")]
+            [StringLength(50, ErrorMessage = "Soyad en fazla 50 karakter olabilir")]
+            [Display(Name = "Soyad")]
+            public string LastName { get; set; }
+
+            [Required(ErrorMessage = "E-posta alanı zorunludur")]
+            [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz")]
+            [Display(Name = "E-posta")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Şifre alanı zorunludur")]
+            [StringLength(100, ErrorMessage = "Şifre en az {2} karakter olmalıdır", MinimumLength = 3)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Şifre")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Şifre Tekrar")]
+            [Compare("Password", ErrorMessage = "Şifreler eşleşmiyor")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -114,6 +96,11 @@ namespace GymManagementSystem.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                
+                // Set FirstName and LastName
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.CreatedAt = DateTime.Now;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -122,6 +109,9 @@ namespace GymManagementSystem.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    
+                    // Add to Member role by default
+                    await _userManager.AddToRoleAsync(user, "Member");
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

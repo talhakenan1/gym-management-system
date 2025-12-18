@@ -1,0 +1,116 @@
+@model IEnumerable<GymManagementSystem.Models.Appointment>
+
+<div class="card shadow">
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Üye</th>
+                            <th>Antrenör</th>
+                            <th>Hizmet</th>
+                            <th>Tarih</th>
+                            <th>Saat</th>
+                            <th>Süre</th>
+                            <th>Fiyat</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var appointment in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <strong>@appointment.User.FirstName @appointment.User.LastName</strong>
+                                            <br>
+                                            <small class="text-muted">@appointment.User.Email</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>@appointment.Trainer.FirstName @appointment.Trainer.LastName</strong>
+                                    <br>
+                                    <small class="text-muted">@appointment.Trainer.Specialization</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">@appointment.Service.Name</span>
+                                </td>
+                                <td>
+                                    <i class="fas fa-calendar text-primary"></i>
+                                    @appointment.AppointmentDate.ToString("dd.MM.yyyy")
+                                </td>
+                                <td>
+                                    <i class="fas fa-clock text-success"></i>
+                                    @appointment.StartTime.ToString(@"hh\:mm") - @appointment.EndTime.ToString(@"hh\:mm")
+                                </td>
+                                <td>
+                                    @appointment.Service.Duration dk
+                                </td>
+                                <td>
+                                    <strong class="text-success">₺@appointment.TotalPrice</strong>
+                                </td>
+                                <td>
+                                    @switch (appointment.Status)
+                                    {
+                                        case GymManagementSystem.Models.AppointmentStatus.Pending:
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock"></i> Bekliyor
+                                            </span>
+                                            break;
+                                        case GymManagementSystem.Models.AppointmentStatus.Confirmed:
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> Onaylandı
+                                            </span>
+                                            break;
+                                        case GymManagementSystem.Models.AppointmentStatus.Cancelled:
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times"></i> İptal
+                                            </span>
+                                            break;
+                                        case GymManagementSystem.Models.AppointmentStatus.Completed:
+                                            <span class="badge bg-primary">
+                                                <i class="fas fa-flag-checkered"></i> Tamamlandı
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        @if (appointment.Status == GymManagementSystem.Models.AppointmentStatus.Pending)
+                                        {
+                                            <button type="button" class="btn btn-sm btn-success" onclick="approveAppointment(@appointment.Id)" title="Onayla">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="rejectAppointment(@appointment.Id)" title="Reddet">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        }
+                                        <a asp-controller="Appointments" asp-action="Details" asp-route-id="@appointment.Id" class="btn btn-sm btn-info" title="Detaylar">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">Randevu bulunamadı</h4>
+                <p class="text-muted">Bu kategoride henüz randevu bulunmuyor.</p>
+            </div>
+        }
+    </div>
+</div>

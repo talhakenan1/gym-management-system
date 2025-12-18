@@ -1,0 +1,244 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="h3 fw-bold text-gray-800 mb-1">Admin Dashboard</h1>
+            <p class="text-muted mb-0">Spor salonu genel bakış ve yönetim paneli</p>
+        </div>
+        <div>
+            <a asp-action="DownloadReport" class="btn btn-primary shadow-sm">
+                <i class="fas fa-download fa-sm text-white-50 me-2"></i>Rapor İndir
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-5">
+        <!-- Total Members -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 border-start border-4 border-primary shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Toplam Üye</div>
+                            <div class="h5 mb-0 fw-bold text-dark">@ViewBag.Stats.TotalMembers</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon-circle bg-primary-subtle text-primary">
+                                <i class="fas fa-users fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Trainers -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 border-start border-4 border-success shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Eğitmen Sayısı</div>
+                            <div class="h5 mb-0 fw-bold text-dark">@ViewBag.Stats.TotalTrainers</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon-circle bg-success-subtle text-success">
+                                <i class="fas fa-user-tie fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Services -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 border-start border-4 border-info shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs fw-bold text-info text-uppercase mb-1">Hizmet Çeşitliliği</div>
+                            <div class="h5 mb-0 fw-bold text-dark">@ViewBag.Stats.TotalServices</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon-circle bg-info-subtle text-info">
+                                <i class="fas fa-dumbbell fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Appointments -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 border-start border-4 border-warning shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">Bekleyen Randevular</div>
+                            <div class="h5 mb-0 fw-bold text-dark">@ViewBag.Stats.PendingAppointments</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="icon-circle bg-warning-subtle text-warning">
+                                <i class="fas fa-calendar-check fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="m-0 fw-bold text-primary"><i class="fas fa-rocket me-2"></i>Hızlı İşlemler</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a asp-controller="Trainers" asp-action="Create" class="btn btn-light w-100 p-3 h-100 d-flex flex-column align-items-center justify-content-center gap-2 border hover-shadow">
+                                <i class="fas fa-user-plus fa-2x text-primary"></i>
+                                <span class="fw-medium">Eğitmen Ekle</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-controller="Services" asp-action="Create" class="btn btn-light w-100 p-3 h-100 d-flex flex-column align-items-center justify-content-center gap-2 border hover-shadow">
+                                <i class="fas fa-plus-circle fa-2x text-success"></i>
+                                <span class="fw-medium">Hizmet Ekle</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-controller="Admin" asp-action="Appointments" class="btn btn-light w-100 p-3 h-100 d-flex flex-column align-items-center justify-content-center gap-2 border hover-shadow">
+                                <i class="fas fa-tasks fa-2x text-warning"></i>
+                                <span class="fw-medium">Randevu Yönetimi</span>
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-controller="TrainerAvailability" asp-action="Index" class="btn btn-light w-100 p-3 h-100 d-flex flex-column align-items-center justify-content-center gap-2 border hover-shadow">
+                                <i class="fas fa-clock fa-2x text-info"></i>
+                                <span class="fw-medium">Müsaitlik Ayarları</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent & Status -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+                    <h6 class="m-0 fw-bold text-primary"><i class="fas fa-history me-2"></i>Son Aktiviteler</h6>
+                    <a href="#" class="text-decoration-none text-muted small">Tümünü Gör</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item border-0 px-4 py-3 d-flex align-items-center">
+                            <div class="bg-success-subtle rounded-circle p-2 me-3"><i class="fas fa-user-plus text-success"></i></div>
+                            <div class="flex-grow-1">
+                                <div class="small fw-bold text-dark">Yeni Üye Kaydı</div>
+                                <div class="small text-muted">Ahmet Yılmaz sisteme kayıt oldu</div>
+                            </div>
+                            <span class="small text-muted">2s önce</span>
+                        </div>
+                        <div class="list-group-item border-0 px-4 py-3 d-flex align-items-center bg-light">
+                            <div class="bg-info-subtle rounded-circle p-2 me-3"><i class="fas fa-calendar-plus text-info"></i></div>
+                            <div class="flex-grow-1">
+                                <div class="small fw-bold text-dark">Yeni Randevu</div>
+                                <div class="small text-muted">Merve Demir - Pilates Dersi</div>
+                            </div>
+                            <span class="small text-muted">4s önce</span>
+                        </div>
+                        <div class="list-group-item border-0 px-4 py-3 d-flex align-items-center">
+                            <div class="bg-warning-subtle rounded-circle p-2 me-3"><i class="fas fa-star text-warning"></i></div>
+                            <div class="flex-grow-1">
+                                <div class="small fw-bold text-dark">AI Analizi</div>
+                                <div class="small text-muted">Yeni bir AI sağlık analizi oluşturuldu</div>
+                            </div>
+                            <span class="small text-muted">5s önce</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="m-0 fw-bold text-primary"><i class="fas fa-server me-2"></i>Sistem Durumu</h6>
+                </div>
+                <div class="card-body px-4">
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-bold">Doluluk Oranı</span>
+                            <span class="small fw-bold text-primary">85%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-bold">Eğitmen Müsaitliği</span>
+                            <span class="small fw-bold text-success">60%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-bold">Ekipman Kullanımı</span>
+                            <span class="small fw-bold text-info">45%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-bold">Müşteri Memnuniyeti</span>
+                            <span class="small fw-bold text-warning">98%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 98%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .icon-circle {
+        height: 3rem;
+        width: 3rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.1); }
+    .bg-success-subtle { background-color: rgba(25, 135, 84, 0.1); }
+    .bg-info-subtle { background-color: rgba(13, 202, 240, 0.1); }
+    .bg-warning-subtle { background-color: rgba(255, 193, 7, 0.1); }
+    
+    .hover-shadow { transition: all 0.3s ease; }
+    .hover-shadow:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        border-color: transparent!important;
+    }
+</style>

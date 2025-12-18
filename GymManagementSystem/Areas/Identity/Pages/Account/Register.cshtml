@@ -1,64 +1,141 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Kayıt Ol";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label asp-for="Input.Email">Email</label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="row g-0">
+                    <!-- Sol Taraf - Kayıt Formu -->
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center mb-4">
+                                <h3 class="fw-bold text-dark">Yeni Hesap Oluştur</h3>
+                                <p class="text-muted">Fitness yolculuğunuza başlamak için kayıt olun</p>
+                            </div>
+                            
+                            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3" role="alert"></div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="Input.FirstName" class="form-label fw-medium">
+                                            <i class="fas fa-user me-2 text-primary"></i>Ad
+                                        </label>
+                                        <input asp-for="Input.FirstName" class="form-control form-control-lg" placeholder="Adınız" />
+                                        <span asp-validation-for="Input.FirstName" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Input.LastName" class="form-label fw-medium">
+                                            <i class="fas fa-user me-2 text-primary"></i>Soyad
+                                        </label>
+                                        <input asp-for="Input.LastName" class="form-control form-control-lg" placeholder="Soyadınız" />
+                                        <span asp-validation-for="Input.LastName" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3 mt-3">
+                                    <label asp-for="Input.Email" class="form-label fw-medium">
+                                        <i class="fas fa-envelope me-2 text-primary"></i>E-posta Adresi
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-at text-muted"></i>
+                                        </span>
+                                        <input asp-for="Input.Email" class="form-control form-control-lg border-start-0 ps-0" 
+                                               autocomplete="username" placeholder="ornek@email.com" />
+                                    </div>
+                                    <span asp-validation-for="Input.Email" class="text-danger small"></span>
+                                </div>
+                                
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label asp-for="Input.Password" class="form-label fw-medium">
+                                            <i class="fas fa-lock me-2 text-primary"></i>Şifre
+                                        </label>
+                                        <input asp-for="Input.Password" class="form-control form-control-lg" 
+                                               autocomplete="new-password" placeholder="••••••••" />
+                                        <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Input.ConfirmPassword" class="form-label fw-medium">
+                                            <i class="fas fa-lock me-2 text-primary"></i>Şifre Tekrar
+                                        </label>
+                                        <input asp-for="Input.ConfirmPassword" class="form-control form-control-lg" 
+                                               autocomplete="new-password" placeholder="••••••••" />
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                    <label class="form-check-label text-muted" for="termsCheck">
+                                        <a href="#" class="text-decoration-none">Kullanım Şartları</a> ve 
+                                        <a href="#" class="text-decoration-none">Gizlilik Politikası</a>'nı kabul ediyorum
+                                    </label>
+                                </div>
+                                
+                                <div class="d-grid gap-2 mb-4">
+                                    <button id="registerSubmit" type="submit" class="btn btn-primary btn-lg rounded-3">
+                                        <i class="fas fa-user-plus me-2"></i>Kayıt Ol
+                                    </button>
+                                </div>
+                                
+                                <div class="text-center">
+                                    <span class="text-muted">Zaten hesabınız var mı?</span>
+                                    <a asp-page="./Login" class="text-decoration-none fw-medium ms-1">
+                                        Giriş Yap <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-                }
-            }
-        </section>
+                    </div>
+                    
+                    <!-- Sağ Taraf - Görsel ve Bilgi -->
+                    <div class="col-lg-5 d-none d-lg-block">
+                        <div class="h-100 p-5 text-white d-flex flex-column justify-content-center" style="background: linear-gradient(135deg, #198754 0%, #157347 50%, #146c43 100%);">
+                            <div class="text-center mb-4">
+                                <div class="bg-white bg-opacity-25 rounded-circle p-4 d-inline-flex mb-4">
+                                    <i class="fas fa-running fa-3x"></i>
+                                </div>
+                                <h2 class="fw-bold mb-3">Haydi Başlayalım!</h2>
+                                <p class="opacity-75 mb-4">Ücretsiz hesap oluşturun ve binlerce fitness içeriğine erişin.</p>
+                            </div>
+                            
+                            <div class="mt-auto">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <span>Kolay Randevu Alma</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <span>AI Destekli Analiz</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <span>İlerleme Takibi</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <span>Uzman Antrenör Desteği</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

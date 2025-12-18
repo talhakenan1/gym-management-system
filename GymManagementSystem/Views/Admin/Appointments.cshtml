@@ -1,0 +1,95 @@
+@model IEnumerable<GymManagementSystem.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Randevu Yönetimi";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5">
+                <i class="fas fa-calendar-alt text-primary"></i> Randevu Yönetimi
+            </h1>
+            <p class="lead text-muted">Tüm randevuları görüntüleyin ve yönetin</p>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <ul class="nav nav-tabs" id="appointmentTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">
+                        <i class="fas fa-list"></i> Tümü (@Model.Count())
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+                        <i class="fas fa-clock"></i> Bekleyen (@Model.Count(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Pending))
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="confirmed-tab" data-bs-toggle="tab" data-bs-target="#confirmed" type="button" role="tab">
+                        <i class="fas fa-check"></i> Onaylanan (@Model.Count(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Confirmed))
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab">
+                        <i class="fas fa-times"></i> İptal Edilen (@Model.Count(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Cancelled))
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="appointmentTabContent">
+        <!-- All Appointments -->
+        <div class="tab-pane fade show active" id="all" role="tabpanel">
+            @await Html.PartialAsync("_AppointmentTable", Model)
+        </div>
+
+        <!-- Pending Appointments -->
+        <div class="tab-pane fade" id="pending" role="tabpanel">
+            @await Html.PartialAsync("_AppointmentTable", Model.Where(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Pending))
+        </div>
+
+        <!-- Confirmed Appointments -->
+        <div class="tab-pane fade" id="confirmed" role="tabpanel">
+            @await Html.PartialAsync("_AppointmentTable", Model.Where(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Confirmed))
+        </div>
+
+        <!-- Cancelled Appointments -->
+        <div class="tab-pane fade" id="cancelled" role="tabpanel">
+            @await Html.PartialAsync("_AppointmentTable", Model.Where(a => a.Status == GymManagementSystem.Models.AppointmentStatus.Cancelled))
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function approveAppointment(id) {
+            if (confirm('Bu randevuyu onaylamak istediğinizden emin misiniz?')) {
+                $.post('@Url.Action("ApproveAppointment", "Admin")', { id: id })
+                    .done(function() {
+                        location.reload();
+                    })
+                    .fail(function() {
+                        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+                    });
+            }
+        }
+
+        function rejectAppointment(id) {
+            if (confirm('Bu randevuyu reddetmek istediğinizden emin misiniz?')) {
+                $.post('@Url.Action("RejectAppointment", "Admin")', { id: id })
+                    .done(function() {
+                        location.reload();
+                    })
+                    .fail(function() {
+                        alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+                    });
+            }
+        }
+    </script>
+}

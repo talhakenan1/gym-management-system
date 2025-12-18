@@ -1,0 +1,117 @@
+1. Gereksinim Analizi
+Projenin temeli, ASP.NET Core MVC kullanılarak bir Spor Salonu Yönetim ve Randevu Sistemi geliştirmektir.
+
+A. Teknik Gereksinimler (Kullanılacak Teknolojiler)
+Platform: ASP.NET Core MVC (Güncel LTS sürümü) 
+Programlama Dili: C# 
+Veritabanı: SQL Server veya PostgreSQL 
+ORM: Entity Framework Core
+Sorgulama Dili: LINQ 
+Front-End: Bootstrap 5 , HTML5, CSS3, JavaScript, jQuery 
+Yapay Zeka: OpenAI API veya hazır bir model 
+
+B. Fonksiyonel Gereksinimler (Sistemin Yapması Gerekenler)
+1. Temel Sistem Özellikleri:
+Arayüz (Front-End): Uygulamanın bir kullanıcı arayüzü olmalıdır.
+Admin Paneli: Bir yönetici paneli bulunmalıdır.
+Veri Doğrulama: Hem istemci (client) hem de sunucu (server) tarafında veri doğrulaması (data validation) yapılmalıdır.
+2. Kimlik Doğrulama ve Yetkilendirme (Auth):
+Kayıt/Üye Olma: Kullanıcı kayıt sayfası bulunmalıdır.
+Rol Bazlı Yetkilendirme: Sistemde en az iki rol olmalıdır.
+Admin: ogrencinumarasi@sakarya.edu.tr / Şifre: sau 
+Üye: Kayıtlı kullanıcı 
+Authorization (Yetkilendirme) kuralları doğru bir şekilde uygulanmalıdır.
+3. Varlık Yönetimi (CRUD İşlemleri):
+Tüm temel varlıklar (Spor Salonu, Antrenör, Hizmet, Üye, Randevu vb.) için CRUD (Create, Read, Update, Delete) işlemleri tam olarak uygulanmalıdır.
+4. Modüller ve İşlevler:
+Spor Salonu Tanımlamaları:
+Sistemde spor salonları tanımlanabilmelidir (tek salonlu uygulama da kabul edilir).
+Her salon için çalışma saatleri, hizmet türleri (fitness, yoga vb.), hizmet süreleri ve ücretleri tanımlanabilmelidir.
+Antrenör (Eğitmen) Yönetimi:
+Salonlarda görev yapan antrenörler sisteme eklenebilmelidir.
+Antrenörlerin uzmanlık alanları (kas geliştirme, kilo verme vb.) ve verebildikleri hizmet türleri belirtilmelidir.
+Antrenörlerin müsaitlik saatleri tanımlanabilmelidir.
+Üye ve Randevu Sistemi:
+Üyeler, uygun antrenör ve hizmete göre randevu alabilmelidir.
+Randevu saati çakışıyorsa (uygun değilse) sistem kullanıcıyı uyarmalıdır.
+Randevu detayları (hizmet, süre, ücret, eğitmen) sistemde saklanmalıdır.
+Randevu onay mekanizması bulunmalıdır.
+REST API Kullanımı:
+Projenin en az bir bölümü, veritabanı ile REST API kullanarak iletişim kurmalıdır.
+API üzerinden LINQ sorguları ile filtreleme (en az bir modülde) yapılmalıdır.
+Örnek API fonksiyonları: Tüm antrenörleri listeleme , belirli tarihte uygun antrenörleri getirme , üye randevularını getirme.
+
+Yapay Zeka Entegrasyonu:
+Yapay zeka aracı ile entegre bir özellik bulunmalıdır.
+Kullanıcılar fotoğraf yükleyerek veya vücut tipi/boy/kilo bilgisi girerek egzersiz veya diyet planı önerileri alabilmelidir.
+(İsteğe bağlı): Kullanıcıların belirli egzersizleri yapınca nasıl görüneceklerine dair bir resim istenmesi.
+
+2. Proje Yol Haritası (Öneri)
+Bu, projeyi adım adım tamamlamak için önerilen bir yol haritasıdır:
+Faz 1: Planlama ve Kurulum
+GitHub Kurulumu: Herkese açık bir GitHub deposu oluşturun.
+README.md: Proje hakkında kısa bir açıklama içeren README.md dosyasını ilk commit olarak ekleyin.
+Proje İskeleti: ASP.NET Core MVC projesini oluşturun. Gerekli kütüphaneleri (EF Core, Bootstrap) ekleyin.
+Veritabanı Tasarımı: Rapor için de gerekli olan veritabanı modelini (E-R diyagramı) tasarlayın. (Tablolar: Users, Roles, Gyms, Trainers, Services, Appointments vb.)
+
+Faz 2: Temel Model ve Admin Paneli
+Modeller ve DBContext: Entity Framework Core kullanarak C# modellerini (sınıfları) ve DbContext'i oluşturun.
+Kimlik Doğrulama: ASP.NET Core Identity kullanarak üye olma , giriş yapma ve rol yönetimini  entegre edin.
+Admin Paneli (CRUD): Admin rolü için bir panel oluşturun.
+Antrenör Yönetimi (CRUD) 
+Hizmet Yönetimi (CRUD) 
+(Varsa) Salon Yönetimi (CRUD)
+
+Faz 3: Çekirdek Fonksiyonellik (Kullanıcı Tarafı)
+Antrenör Listeleme: Kullanıcıların antrenörleri ve uzmanlık alanlarını görebileceği sayfaları oluşturun.
+Antrenör Müsaitlik: Adminlerin antrenörler için müsaitlik saatlerini tanımlayabileceği arayüzü yapın.
+Randevu Alma: Üyelerin, antrenörlerin müsaitlik durumuna göre randevu almasını sağlayan sistemi geliştirin.
+Randevu Doğrulama: Randevu çakışmalarını kontrol eden uyarı sistemini ve onay mekanizmasını  ekleyin.
+
+Faz 4: İleri Düzey Özellikler (API & AI) 
+REST API Geliştirme:
+Yeni bir API projesi veya mevcut proje içinde API Controller'ları oluşturun.
+LINQ kullanarak filtreleme yapan en az bir API endpoint'i (örn: tarihe göre uygun antrenör getirme) yazın.
+
+Yapay Zeka Entegrasyonu:
+OpenAI API  veya başka bir servise bağlanın.
+Kullanıcıdan boy/kilo/fotoğraf alarak AI servisine gönderen ve dönen yanıtı (egzersiz/diyet önerisi)  kullanıcıya gösteren özelliği geliştirin.
+
+Faz 5: Tamamlama ve Teslimat
+Doğrulama ve Arayüz: İstemci ve sunucu taraflı veri doğrulamalarını (Validation) tamamlayın. Arayüzü (Bootstrap 5) son haline getirin.
+GitHub Commitleri: Proje boyunca düzenli commit yapıldığından ve en az 10 commit (grup ise orantılı ) olduğundan emin olun.
+Rapor Yazımı: Projeyi tanıtan, veritabanı modelini anlatan ve ekran görüntüleri içeren raporu hazırlayın.
+Teslimat: Projeyi ve raporu SABİS sistemine yükleyin. GitHub bağlantısını kontrol edin.
+
+Sunum Hazırlığı: Son hafta yapılacak yüz yüze sunum için hazırlanın.
+
+3. Proje Kuralları ve Teslim Süreci
+A. Grup ve Değerlendirme Kuralları
+
+Kopya veya benzer projeler tespit edilirse, tüm proje sahiplerine DZ notu verilecektir.
+
+Son hafta her öğrenci yüz yüze proje sunumu yapacaktır.
+
+Sunuma katılmayan veya projeyi yüklemeyen öğrenciler puan alamaz.
+
+Grup üyeleri, sunumda sorulan sorulara verdikleri cevaplara göre farklı puanlar alabilir.
+
+B. GitHub Kullanım Zorunlulukları
+Her grup/birey, GitHub üzerinde herkese açık bir proje oluşturmalıdır.
+İlk commit, proje hakkında kısa bir açıklama (README.md) içermelidir.
+Proje geliştikçe düzenli olarak commit yapılmalıdır.
+En az 10 farklı commit bulunmayan projeler bu kısımdan puan almayacaktır.
+
+C. Teslim ve Raporlama
+Proje için bir rapor hazırlanmalıdır.
+Rapor Kapağı:
+Proje başlığı 
+Öğrenci numarası, adı soyadı 
+Ders grubu 
+GitHub bağlantısı 
+Rapor İçeriği:
+Projeyi tanıtmalı 
+Veritabanı modelini anlatmalı 
+Ekran görüntülerini içermelidir 
+Raporla birlikte proje SABİS sistemine yüklenmelidir (Tüm grup üyeleri yüklemelidir).
+Yüklenen proje, rapor ve GitHub bağlantısı sonradan kontrol edilmelidir.
