@@ -10,6 +10,8 @@ namespace GymManagementSystem.Services
         private readonly IConfiguration _configuration;
         private readonly ILogger<GeminiService> _logger;
         private readonly string _apiKey;
+        private readonly string _baseUrl;
+        private readonly string _modelId;
 
         public GeminiService(HttpClient httpClient, IConfiguration configuration, ILogger<GeminiService> logger)
         {
@@ -17,6 +19,8 @@ namespace GymManagementSystem.Services
             _configuration = configuration;
             _logger = logger;
             _apiKey = _configuration["Gemini:ApiKey"] ?? "";
+            _baseUrl = _configuration["Gemini:BaseUrl"] ?? "https://generativelanguage.googleapis.com/v1beta/models/";
+            _modelId = _configuration["Gemini:ModelId"] ?? "gemini-pro";
             
             // Configure HttpClient timeout
             _httpClient.Timeout = TimeSpan.FromSeconds(60);
@@ -194,8 +198,8 @@ Türkçe olarak yaz.";
                 var json = JsonSerializer.Serialize(requestBody);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                // Using gemini-1.5-flash-latest model (current and available)
-                var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={_apiKey}";
+                // Construct URL using configuration
+                var url = $"{_baseUrl}{_modelId}:generateContent?key={_apiKey}";
                 
                 _logger.LogInformation("Sending request to Gemini API...");
                 var response = await _httpClient.PostAsync(url, content);
