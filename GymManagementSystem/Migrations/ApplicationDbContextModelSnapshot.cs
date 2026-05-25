@@ -33,10 +33,10 @@ namespace GymManagementSystem.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DietRecommendations")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ExerciseRecommendations")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("FitnessGoal")
                         .HasColumnType("INTEGER");
@@ -45,7 +45,7 @@ namespace GymManagementSystem.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GeneralAdvice")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GeneratedImagePath")
                         .HasColumnType("TEXT");
@@ -57,7 +57,7 @@ namespace GymManagementSystem.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PhotoAnalysis")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PhotoPath")
                         .HasColumnType("TEXT");

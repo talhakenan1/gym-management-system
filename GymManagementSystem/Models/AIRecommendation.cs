@@ -47,18 +47,18 @@ namespace GymManagementSystem.Models
         public ActivityLevel? ActivityLevel { get; set; }
 
         // AI Generated Content
-        [Column(TypeName = "nvarchar(max)")]
+
         public string? ExerciseRecommendations { get; set; }
 
-        [Column(TypeName = "nvarchar(max)")]
+
         public string? DietRecommendations { get; set; }
 
-        [Column(TypeName = "nvarchar(max)")]
+
         public string? GeneralAdvice { get; set; }
 
         public string? PhotoPath { get; set; }
 
-        [Column(TypeName = "nvarchar(max)")]
+
         public string? PhotoAnalysis { get; set; }
 
         public string? GeneratedImagePath { get; set; }
