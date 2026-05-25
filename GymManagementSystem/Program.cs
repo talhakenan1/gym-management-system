@@ -60,6 +60,8 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
+        var context = services.GetRequiredService<GymManagementSystem.Models.ApplicationDbContext>();
+        context.Database.Migrate();
         await SeedData.Initialize(services);
     }
     catch (Exception ex)
